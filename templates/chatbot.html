@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+    body, html {
+      height: 100%;
+    }
+
+    .messages-box {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .messages-list {
+      padding-left: 0;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      list-style: none;
+    }
+
+    .message-text {
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .sent {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .received {
+      background-color: #f1f0f0;
+      align-self: flex-start;
+    }
+
+    .message-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+
+    .message-input {
+      flex: 1;
+      border-radius: 0;
+      border-right: none;
+    }
+
+    .btn-send {
+      border-radius: 0;
+    }
+
+    .chat-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+{% endblock %}
+
+
+{% block content %}
+<div class="chat-container">
+  <div class="card flex-grow-1">
+    <div class="card-header bg-primary text-white">Chat</div>
+
+    <div class="card-body messages-box">
+      
+      <ul class="list-unstyled messages-list">
+        
+        <li class="message received">
+          <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+              Hallo, ich bin Ihr AI-Chatbot, du kannst mich alles fragen!
+            </div>
+          </div>
+        </li>
+
+        <div class="options-container" id="first-set-options" style="display:block">
+          <button type="button" class="option-button" onclick="trackShipment()">Lieferung verfolgen</button>
+          <button type="button" class="option-button" onclick="findProduct()">Hilfe bei der Produktsuche</button>
+          <button type="button" class="option-button" onclick="requestReturn()">Rückgabe beantragen</button>
+        </div>
+
+          <li class="message sent" >
+            <div class="message-text" id="first-answer" style="display:none;">
+              <div class="message-sender">
+                <b>Sie</b>
+              </div>
+              <div class="message-content">
+              </div>
+            </div>
+          </li>
+
+        <div class="input-group" id="track-shipment" style="display:none;">Bitte nennen Sie mir Ihre E-Mail-Adresse
+          <br>
+          <div class="input-group">
+            <input type="text" id="customer-email" class="message-text">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-send">Senden</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="find-product" style="display:none;">
+ 
+              <li class="message received">
+                <div class="message-text">
+                  <div class="message-sender">
+                    <b>AI Chatbot</b>
+                  </div>
+                  <div class="message-content">
+                    Bitte beschreiben Sie, welche Art von Produkt Sie suchen?
+                  </div>
+                </div>
+              </li>
+      
+              {% for chat in chats %}
+                {% if chat.user == request.user %}
+      
+                  <li class="message sent">
+                <div class="message-text">
+                  <div class="message-sender">
+                    <b>Sie</b>
+                  </div>
+                  <div class="message-content">
+                    {{chat.message}}
+                  </div>
+                </div>
+              </li>
+      
+              <li class="message received">
+                <div class="message-text">
+                  <div class="message-sender">
+                    <b>AI Chatbot</b>
+                  </div>
+                  <div class="message-content">
+                    {{chat.response}}
+                  </div>
+                </div>
+              </li>
+      
+                {% endif %}
+              {% endfor %}
+
+          <form class="message-form">
+          {%csrf_token%}
+          <div class="input-group">
+            <input type="text" id="product-info" class="message-input">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-send">Senden</button>
+            </div>
+          </div></form>
+        </div>
+
+         <div id="request-return" style="display:none;">Bitte nennen Sie mir die Nummer Ihrer Bestellung
+          <div class="input-group">
+            <input type="text" id="order-number" class="message-text">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-send">Senden</button>
+            </div>
+          </div>
+        </div>
+
+      </ul>
+      
+    </div>
+    <br><br>
+    <br><br>
+    <br><br>
+  </div>
+</div>
+
+<script>
+  const messagesList = document.querySelector('.messages-list');
+  const messageForm = document.querySelector('.message-form');
+  const messageInput = document.querySelector('.message-input');
+
+  messageForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    const messageItem = document.createElement('li');
+    messageItem.classList.add('message', 'sent');
+    messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>Sie</b>
+            </div>
+            <div class="message-content">
+                ${message}
+            </div>
+        </div>`;
+    messagesList.appendChild(messageItem);
+
+    messageInput.value = '';
+
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': message
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const response = data.response;
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'received');
+        messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+                ${response}
+            </div>
+        </div>
+          `;
+        messagesList.appendChild(messageItem);
+      });
+  });
+
+  function trackShipment() {
+  
+    const hiddenDiv = document.getElementById('track-shipment');
+    const element_1 = document.getElementById('find-product');
+    const element_2 = document.getElementById('request-return');
+    const options = document.getElementById('first-set-options');
+    const answer = document.getElementById('first-answer');
+    const content = answer.querySelector('.message-content');
+
+    hiddenDiv.style.display = 'block';
+    element_1.style.display = 'none';
+    element_2.style.display = 'none';
+    options.style.display = 'none';
+    answer.style.display = 'block';
+    content.textContent = 'Lieferung verfolgen';
+    
+    }
+
+  function findProduct() {
+  
+    const hiddenDiv = document.getElementById('find-product');
+    const element_1 = document.getElementById('track-shipment');
+    const element_2 = document.getElementById('request-return');
+    const options = document.getElementById('first-set-options');
+    const answer = document.getElementById('first-answer');
+    const content = answer.querySelector('.message-content');
+
+    hiddenDiv.style.display = 'block';
+    element_1.style.display = 'none';
+    element_2.style.display = 'none';
+    options.style.display = 'none';
+    answer.style.display = 'block';
+    content.textContent = 'Hilfe bei der Produktsuche';
+    
+    }
+
+  function requestReturn() {
+  
+    const hiddenDiv = document.getElementById('request-return');
+    const element_1 = document.getElementById('find-product');
+    const element_2 = document.getElementById('track-shipment');
+    const options = document.getElementById('first-set-options');
+    const answer = document.getElementById('first-answer');
+    const content = answer.querySelector('.message-content');
+
+    hiddenDiv.style.display = 'block';
+    element_1.style.display = 'none';
+    element_2.style.display = 'none';
+    options.style.display = 'none';
+    answer.style.display = 'block';
+    content.textContent = 'Rückgabe beantragen';
+    
+    }
+
+ 
+
+ 
+
+</script>
+{% endblock %}
