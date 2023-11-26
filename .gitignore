@@ -399,3 +399,4 @@ FodyWeavers.xsd
 
 testing.ipynb
 *.env
+*.ipynb
