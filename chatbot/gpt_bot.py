@@ -1,24 +1,32 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import openai
+import json, logging
 import os
 from dotenv import load_dotenv
 import pandas as pd
 from . import config
 import chromadb
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from shopifyFunctions import Shopify
 
 load_dotenv()
 
 
 def chatbot(request):
-    if request.method == "POST":
+    logging.warning("Received dictionary: ", request.POST)
+    if request.method == "POST" and request.POST.get("name")=="productDescription":
         message = request.POST.get("message")
         response = ask_gpt(message)
         return JsonResponse({"message": message, "response": response})
+
+    elif request.method == "POST" and request.POST.get("name")=="salesOrderNumber":
+        message = request.POST.get("message")
+        response, isFound = find_salesOrder(message)
+        return JsonResponse({"message": message, "response": response, "isFound": isFound})
+    
     elif request.method == "GET":
         return render(request, 'chatbot.html')
-
 
 def ask_gpt(message):
     openai.api_key = os.environ['OPENAI_API_KEY']
@@ -47,3 +55,11 @@ def find_embedding(query):
     response = '<br>'.join(titles)
     return "<p> Hier sind die Produkte, die am besten zu Ihrer Anfrage passen: <br>" + response + "</p"
 
+def find_salesOrder(salesOrderNumber):
+    responseDict = Shopify(salesOrderNumber=salesOrderNumber).main()
+    if responseDict and responseDict["order"] == False:
+        return  f"<p>Es wurde kein Kundenauftrag mit der Nummer {salesOrderNumber} gefunden. Bitte überprüfen Sie die Auftragsnummer und versuchen Sie es erneut.</p", False
+    elif responseDict and responseDict["order"] == True and responseDict["url"] is None:
+        return  f"<p>Ihre Bestellung wurde noch nicht versandt</p", True
+    elif responseDict and responseDict["order"] == True and responseDict["url"]:
+        return f'<p>Verwenden Sie diesen Link, um Ihre Bestellung zu verfolgen: <a href={responseDict["url"]} target="blank">Auftrag {salesOrderNumber}</a></p', True
