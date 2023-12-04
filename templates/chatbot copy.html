@@ -187,3 +187,59 @@
 
 </script>
 {% endblock %}
+
+
+<div class="input-group">
+  <input type="text" id="sales-order-number" class="message-text">
+  <div class="input-group-append">
+    <button type="submit" class="btn btn-primary btn-send" onclick="sendData()">Senden</button>
+    <button type="button" class="option-button" onclick="">Ich habe die Nummer vergessen</button>
+  </div>
+</div>
+
+
+const customerEmail = document.getElementById('sales-order-number').value;
+    console-log("test")
+
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Input-Identifier': 'salesOrderNumber' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': customerEmail
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const response = data.response;
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'received');
+        messageItem.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+                ${response}
+            </div>
+        </div>
+          `;
+        messagesList.appendChild(messageItem);
+      });
+
+      <div id="track-shipment" style="display:none;">
+        <li class="message received" >
+          <div class="message-sender">
+            <b>AI Chatbot</b>
+          </div>
+          <div class="message-content">Bitte geben Sie die Auftragsnummer ein
+          </div> </li>
+          <form id="sales-order-form" method="post">
+            <div class="input-group">
+            {%csrf_token%}
+            <div class="input-group-append">
+              <input type="text" id="sales-order-number" name="salesOrderNumber">
+                <button type="submit">Senden</button>
+              </div>
+            </div></form>
+          </div>
