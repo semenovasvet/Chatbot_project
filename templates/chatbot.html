@@ -55,6 +55,26 @@
       background-color: #f8f9fa;
     }
 
+    .email-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+
+    .advice-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+
     .track-shipment {
       flex: 1;
       border-radius: 0;
@@ -62,6 +82,17 @@
     }
 
     .product-description {
+      flex: 1;
+      border-radius: 0;
+      border-right: none;
+    }
+
+    .email {
+      flex: 1;
+      border-radius: 0;
+      border-right: none;
+    }
+    .advice {
       flex: 1;
       border-radius: 0;
       border-right: none;
@@ -167,7 +198,7 @@
                   </div>
                 </div>
               </li>
-      
+    
               {% for chat in chats %}
                 {% if chat.user == request.user %}
       
@@ -207,55 +238,15 @@
         </div>
    
 
-        <div id="find-customer" style="display:none;">
-          <li class="message received">
-            <div class="message-text">
-              <div class="message-sender">
-                <b>AI Chatbot</b>
-              </div>
-              <div class="message-content">
-                Bitte geben Sie Ihre E-Mail-Adresse ein
-              </div>
-            </div>
-          </li>
-  
-          {% for chat in chats %}
-            {% if chat.user == request.user %}
-  
-              <li class="message sent">
-            <div class="message-text">
-              <div class="message-sender">
-                <b>Sie</b>
-              </div>
-              <div class="message-content">
-                {{chat.message}}
-              </div>
-            </div>
-          </li>
-  
-          <li class="message received">
-            <div class="message-text">
-              <div class="message-sender">
-                <b>AI Chatbot</b>
-              </div>
-              <div class="message-content">
-                {{chat.response}}
-              </div>
-            </div>
-          </li>
-  
-            {% endif %}
-          {% endfor %}
-
-      <form class="email-form">
+      <form class="email-form" style="display:none;">
       {%csrf_token%}
       <div class="input-group">
-        <input type="text" id="email" class="email" name="productDescription">
+        <input type="text" id="email" class="email" name="email">
         <div class="input-group-append">
           <button type="submit" class="btn btn-primary btn-send">Senden</button>
         </div>
       </div></form>
-    </div>
+
 
 
         <div id="find-product" style="display:none;">
@@ -308,7 +299,15 @@
           </div></form>
         </div>
 
-      
+        <form class="advice-form" style="display:none;">
+          {%csrf_token%}
+          <div class="input-group">
+            <input type="text" id="advice" class="advice" name="advice">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-send">Senden</button>
+            </div>
+          </div></form>
+  
     </div>
     <br><br>
     <br><br>
@@ -317,6 +316,7 @@
 </div>
 
 <script>
+  let isFirstTimeForgotFunc = true;
 
   function trackShipment() {
     const messagesList = document.querySelector('.messages-list');
@@ -335,7 +335,6 @@
 
     salesOrderNumberForm.addEventListener('submit', (event) => {
       event.preventDefault();
-
       const message = salesOrderNumber.value.trim();
       const messageName = salesOrderNumber.name;
       if (message.length === 0) {
@@ -356,7 +355,8 @@
       messagesList.appendChild(messageItem);
 
       salesOrderNumber.value = '';
-
+      const forgetButton = document.getElementById('forgot-button');
+      forgetButton.style.display = 'none';
       fetch('', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
@@ -385,10 +385,6 @@
             `;
           messagesList.appendChild(messageItem);
           
-          })
-          .catch(error => {
-                console.error('Error:', error);
-              });
           if (!isFound) {
             trackShipment();
           } else {
@@ -404,12 +400,18 @@
                 </div>
             </div>
             <div class="options-container" id="end-set-options" style="display:block">
-                <button type="button" class="option-button" onclick="humanSupportHelp()">Ja bitte</button>
+                <button type="button" class="option-button" onclick="restartBot()">Ja bitte</button>
                 <button type="button" class="option-button" onclick="ending()">Nein danke</button>
+                <button type="button" class="option-button" onclick="humanSupportHelp()">Kontakt mit menschlicher Hilfe</button>
               </div>
               `;
             messagesList.appendChild(messageItem);
           }
+          
+          })
+          .catch(error => {
+                console.error('Error:', error);
+              });
           
             
           
@@ -436,7 +438,7 @@
 
     productForm.addEventListener('submit', (event) => {
       event.preventDefault();
-    
+
       const message = productDescription.value.trim();
       const messageName = productDescription.name;
       if (message.length === 0) {
@@ -457,6 +459,7 @@
       messagesList.appendChild(messageItem);
 
       productDescription.value = '';
+      productForm.style.display = 'none';
 
       fetch('', {
         method: 'POST',
@@ -480,13 +483,80 @@
               </div>
               <div class="message-content">
                   ${response}
+                  <br><p> Wenn Sie Fragen zu den Produkten in der Liste haben, können Sie mich fragen. </p>
               </div>
           </div>
             `;
           messagesList.appendChild(messageItem)
         
         })
+        .then(adviceBot)
+        .catch(error => {
+              console.error('Error:', error);
+        });
+    });
+  }
+
+  function adviceBot() {
+    const adviceForm = document.querySelector(".advice-form");
+    const adviceMessage = document.querySelector('.advice');
+    const messagesList = document.querySelector('.messages-list');
+    adviceForm.style.display = "block";
+
+    adviceForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const message = adviceMessage.value.trim();
+      const messageName = adviceMessage.name;
+      if (message.length === 0) {
+        return;
+      }
+
+      const messageItem = document.createElement('li');
+      messageItem.classList.add('message', 'sent');
+      messageItem.innerHTML = `
+          <div class="message-text">
+              <div class="message-sender">
+                  <b>Sie</b>
+              </div>
+              <div class="message-content">
+                  ${message}
+              </div>
+          </div>`;
+      messagesList.appendChild(messageItem);
+
+      adviceMessage.value = '';
+
+      fetch('', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({
+          'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          'message': message,
+          "name": messageName
+        })
+      })
+        .then(response => response.json())
         .then(data => {
+          console.log('Response from server:', data);
+          const response = data.response;
+          const isEnd = data.isEnd;
+          const messageItem = document.createElement('li');
+          messageItem.classList.add('message', 'received');
+          messageItem.innerHTML = `
+          <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                  ${response}
+              </div>
+          </div>
+            `;
+          messagesList.appendChild(messageItem)
+
+          if (isEnd) {
+          adviceForm.style.display = "none";
           const messageItem = document.createElement('li');
           messageItem.classList.add('message', 'received');
           messageItem.innerHTML = `
@@ -499,11 +569,13 @@
               </div>
           </div>
           <div class="options-container" id="end-set-options" style="display:block">
-              <button type="button" class="option-button" onclick="humanSupportHelp()">Ja bitte</button>
+              <button type="button" class="option-button" onclick="restartBot()">Ja bitte</button>
               <button type="button" class="option-button" onclick="ending()">Nein danke</button>
-            </div>
+              <button type="button" class="option-button" onclick="humanSupportHelp()">Kontakt mit menschlicher Hilfe</button>            
+              </div>
             `;
           messagesList.appendChild(messageItem);
+            }
         })
         .catch(error => {
               console.error('Error:', error);
@@ -538,8 +610,9 @@
         </div>
     </div>
     <div class="options-container" id="end-set-options" style="display:block">
-        <button type="button" class="option-button" onclick="humanSupportHelp()">Ja bitte</button>
+        <button type="button" class="option-button" onclick="restartBot()">Ja bitte</button>
         <button type="button" class="option-button" onclick="ending()">Nein danke</button>
+        <button type="button" class="option-button" onclick="humanSupportHelp()">Kontakt mit menschlicher Hilfe</button>
       </div>
       `;
     messagesList.appendChild(lastQuestion);
@@ -548,14 +621,151 @@
 
   function forgotNumber() {
     const forgotButton = document.getElementById('forgot-button')
-
     forgotButton.style.display = 'none';
 
+    const messagesList = document.querySelector('.messages-list');
+    const trackShipmentForm = document.querySelector('.salesOrderNumber-form');
+
+    trackShipmentForm.style.display = 'none';
+
+    if (isFirstTimeForgotFunc) {
+    const userAnswerForgot = document.createElement('li');
+    userAnswerForgot.classList.add('message', 'sent')
+    userAnswerForgot.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+                <b>Sie</b>
+            </div>
+            <div class="message-content">
+              Ich habe die Auftragsnummer vergessen
+            </div>
+        </div>`;
+    messagesList.appendChild(userAnswerForgot);
+    isFirstTimeForgotFunc = false;
+      
+    const chatBotAskEmail = document.createElement('li');
+    chatBotAskEmail.classList.add('message', 'received')
+    chatBotAskEmail.innerHTML = `
+        <div class="message-text">
+            <div class="message-sender">
+              <b>AI Chatbot</b>
+            </div>
+            <div class="message-content">
+              Bitte geben Sie Ihre E-Mail-Adresse ein
+            </div>
+        </div>
+          `;
+    messagesList.appendChild(chatBotAskEmail);
+      }
+
+    const emailForm = document.querySelector('.email-form');
+    const email = document.querySelector('.email');
+    emailForm.style.display = 'block';
+
+    emailForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const message = email.value.trim();
+      const messageName = email.name;
+      if (message.length === 0) {
+        return;
+      }
+
+      const messageItem = document.createElement('li');
+      messageItem.classList.add('message', 'sent');
+      messageItem.innerHTML = `
+          <div class="message-text">
+              <div class="message-sender">
+                  <b>Sie</b>
+              </div>
+              <div class="message-content">
+                  ${message}
+              </div>
+          </div>`;
+      messagesList.appendChild(messageItem);
+
+      email.value = '';
+
+      fetch('', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({
+          'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          'message': message,
+          "name": messageName
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Response from server:', data);
+          const response = data.response;
+          const isFound = data.isFound;
+          const messageItem = document.createElement('li');
+          messageItem.classList.add('message', 'received');
+          messageItem.innerHTML = `
+          <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                  ${response}
+              </div>
+          </div>
+            `;
+          messagesList.appendChild(messageItem);
+
+          if (!isFound) {
+            forgotNumber();
+          } else {
+          const messageItem = document.createElement('li');
+            messageItem.classList.add('message', 'received');
+            messageItem.innerHTML = `
+            <div class="message-text">
+                <div class="message-sender">
+                  <b>AI Chatbot</b>
+                </div>
+                <div class="message-content">
+                  Brauchen Sie noch Hilfe?
+                </div>
+            </div>
+            <div class="options-container" id="end-set-options" style="display:block">
+                <button type="button" class="option-button" onclick="restartBot()">Ja bitte</button>
+                <button type="button" class="option-button" onclick="ending()">Nein danke</button>
+                <button type="button" class="option-button" onclick="humanSupportHelp()">Kontakt mit menschlicher Hilfe</button>
+              </div>
+              `;
+            messagesList.appendChild(messageItem);
+          }
+          
+          })
+          .catch(error => {
+                console.error('Error:', error);
+              })
+
+          
+            
+          
+          
+       });
+    }
+  
+  function restartBot() {
+    location.reload();
   }
+  
 
   function humanSupportHelp() {
-  
+
+    const messagesList = document.querySelector('.messages-list');
     const options = document.getElementById('end-set-options');
+    const salesOrderNumberForm = document.querySelector('.salesOrderNumber-form');
+    const emailForm = document.querySelector('.email-form');
+    const productForm = document.querySelector('.product-form');
+
+    options.style.display = 'none';
+    salesOrderNumberForm.style.display = 'none';
+    emailForm.style.display = 'none';
+    productForm.style.display = 'none';
 
     const messageItem = document.createElement('li');
     messageItem.classList.add('message', 'sent');
@@ -565,7 +775,7 @@
                 <b>Sie</b>
             </div>
             <div class="message-content">
-                Ja bitte
+              Kontakt mit menschlicher Hilfe
             </div>
         </div>`;
     messagesList.appendChild(messageItem);
@@ -593,14 +803,23 @@
           `;
         messagesList.appendChild(messageItemAnswer);
        
-    options.style.display = 'none';
+
 
   }
 
 
   function ending() {
-  
+    
+    const messagesList = document.querySelector('.messages-list');
     const options = document.getElementById('end-set-options');
+    const salesOrderNumberForm = document.querySelector('.salesOrderNumber-form');
+    const emailForm = document.querySelector('.email-form');
+    const productForm = document.querySelector('.product-form');
+
+    options.style.display = 'none';
+    salesOrderNumberForm.style.display = 'none';
+    emailForm.style.display = 'none';
+    productForm.style.display = 'none';
 
     const messageItem = document.createElement('li');
     messageItem.classList.add('message', 'sent');
@@ -628,8 +847,7 @@
         </div>
           `;
         messagesList.appendChild(messageItemAnswer);
-       
-    options.style.display = 'none';
+ 
 
   }
 

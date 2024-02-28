@@ -1,0 +1,37 @@
+{
+    "products_query": "query GetProducts($myquery: String!) {\n products(first: 5, query: $myquery) {\n edges {\n node {\n id\n title\n createdAt\n }\n }\n }\n}\n",
+    "productVariants_query": "query GetProducts($myquery: String!) {\n productVariants(first: 5, query: $myquery) {\n edges {\n node {\n id\n title\n createdAt\n }\n }\n }\n}\n",
+    "products_iterator": "query ($numProducts: Int!, $cursor: String, $myquery: String){ products(first: $numProducts, after: $cursor, query:$myquery) { nodes { id title bodyHtml productType status handle variants (first:10) { nodes { id title price sku } } } pageInfo { hasNextPage endCursor } } }",
+
+    
+    "discountAutomaticBasicCreate": "mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {\n discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {\n automaticDiscountNode {\n id\n automaticDiscount {\n ... on DiscountAutomaticBasic {\n combinesWith {\n orderDiscounts\n productDiscounts\n shippingDiscounts\n }\n startsAt\n minimumRequirement {\n ... on DiscountMinimumQuantity {\n greaterThanOrEqualToQuantity\n }\n }\n customerGets {\n value {\n ... on DiscountPercentage {\n percentage\n }\n }\n items {\n ... on DiscountProducts {\n productVariants {\n edges {\n node {\n id\n }\n }\n }\n }\n }\n }\n }\n }\n }\n userErrors {\n field\n code\n message\n }\n }\n}\n",
+    "discountAutomaticBasicUpdate": "mutation discountAutomaticBasicUpdate($id: ID!, $automaticBasicDiscount: DiscountAutomaticBasicInput!) {\n discountAutomaticBasicUpdate(id: $id, automaticBasicDiscount: $automaticBasicDiscount) {\n automaticDiscountNode {\n id\n automaticDiscount {\n ... on DiscountAutomaticBasic {\n customerGets {\n value {\n ... on DiscountPercentage {\n percentage\n }\n }\n }\n minimumRequirement {\n ...on DiscountMinimumQuantity {\n greaterThanOrEqualToQuantity\n }\n }\n }\n }\n }\n userErrors {\n field\n code\n message\n }\n }\n}\n",
+    "discountAutomaticBulkDelete": "mutation discountAutomaticBulkDelete($ids: [ID!]) {\n discountAutomaticBulkDelete (ids: $ids) {\n job {\n id\n }\n userErrors {\n code\n field\n message\n }\n }\n}\n",
+    "automaticDiscountNodes_query": "query GetDiscount($myquery: String!){\n automaticDiscountNodes(first: 10, query: $myquery) {\n edges {\n node {\n id\n automaticDiscount {\n ... on DiscountAutomaticBasic {\n title\n summary\n customerGets {\n items {\n ... on AllDiscountItems {\n allItems\n }\n }\n }\n minimumRequirement {\n ... on DiscountMinimumQuantity {\n greaterThanOrEqualToQuantity\n }\n }\n }\n ... on DiscountAutomaticBxgy {\n title\n summary\n customerBuys {\n value {\n ... on DiscountQuantity {\n quantity\n }\n ... on DiscountPurchaseAmount {\n amount\n }\n }\n }\n customerGets {\n value {\n ... on DiscountOnQuantity {\n quantity {\n quantity\n }\n }\n }\n }\n }\n }\n }\n }\n }\n}\n",
+    
+    "customers_query": "query ($myquery: String){ customers(first: 10, query: $myquery) { edges { node { id state } } } }",
+    "customer_id": "query ($id: ID!){ customer(id: $id) { id firstName lastName acceptsMarketing email phone createdAt updatedAt companyContactProfiles { company { contactCount createdAt defaultCursor id mainContact { customer { email } } externalId } createdAt customer { email } id isMainContact } note verifiedEmail validEmailAddress tags lifetimeDuration defaultAddress { formattedArea address1 } addresses { address1 } image { src } canDelete } }",
+    "customerCreate": "mutation customerCreate($input: CustomerInput!) { customerCreate(input: $input) { userErrors { field message } customer { id email phone firstName lastName emailMarketingConsent { marketingState } addresses { address1 city country phone zip } } } }",
+    
+    "catalogs_query": "query ($myquery: String){ catalogs(first: 10, query: $myquery) { edges { node { id title } } } }",
+    "catalog_id": "query ($id: ID!){ catalog(id: $id) { id title status priceList { id fixedPricesCount name parent { adjustment { type value } settings { compareAtMode } } } publication { id name } } }",
+    "catalogCreate": "mutation catalogCreate($input: CatalogCreateInput!) { catalogCreate(input: $input) { catalog { title status id} userErrors { field message } } }",
+
+    "company_id": "query ($id: ID!){ company(id: $id) { id mainContact { id isMainContact } contacts (first:10) { edges { node { id isMainContact customer { id email } } } } } }",
+    "companyLocations_query": "query ($myquery: String){ companyLocations(first: 10, query: $myquery) { edges { node { id name company { id name contacts (first:10) { edges { node { id isMainContact customer { id email } } } }} billingAddress { address1 address2 city country zip } shippingAddress { address1 address2 city country zip } } } } }",
+    "companyCreate": "mutation companyCreate($input: CompanyCreateInput!) { companyCreate(input: $input) { company { name id} userErrors { field message } } }",
+    "companyAssignCustomerAsContact": "mutation companyAssignCustomerAsContact($companyId: ID!, $customerId: ID!) { companyAssignCustomerAsContact(companyId: $companyId, customerId: $customerId) { companyContact { id } userErrors { field message } } }",
+    "companyAssignMainContact": "mutation companyAssignMainContact($companyContactId: ID!, $companyId: ID!) { companyAssignMainContact(companyContactId: $companyContactId, companyId: $companyId) { company { id } userErrors { field message } } }",
+    "companyContactDelete": "mutation companyContactDelete($companyContactId: ID!) { companyContactDelete(companyContactId: $companyContactId) { deletedCompanyContactId userErrors { field message } } }",
+
+    "orders_query": "query ($myquery:String) { orders(first: 250, query: $myquery) { edges { node { id name displayFinancialStatus fulfillments { trackingInfo { url number } } } } } }",
+    "order_id": "query ($id: ID!){ order(id: $id) { id name email fulfillments { trackingInfo { url number } } } }",
+
+    "priceListCreate": "mutation priceListCreate($input: PriceListCreateInput!) { priceListCreate(input: $input) { priceList { name id } userErrors { field message } } }",
+    "priceListDelete": "mutation priceListDelete($id: ID!) { priceListDelete(id: $id) { deletedId userErrors { field code message } } }",
+    "priceListFixedPricesAdd": "mutation priceListFixedPricesAdd($priceListId: ID!, $prices: [PriceListPriceInput!]!) { priceListFixedPricesAdd(priceListId: $priceListId, prices: $prices) { prices { compareAtPrice { amount currencyCode } price { amount currencyCode } } userErrors { field code message } } }",
+    "priceListFixedPricesByProductUpdate": "mutation priceListFixedPricesByProductUpdate($priceListId: ID!, $pricesToAdd: [PriceListProductPriceInput!]!) { priceListFixedPricesByProductUpdate(priceListId: $priceListId, pricesToAdd: $pricesToAdd) { priceList { id } pricesToAddProducts { id } pricesToDeleteProducts { id } userErrors { field message } } }",
+
+    "publicationCreate": "mutation publicationCreate($input: PublicationCreateInput!) { publicationCreate(input: $input) { publication { id name } userErrors { field message } } }",
+    "publicationUpdate": "mutation publicationUpdate($id: ID!, $input: PublicationUpdateInput!) { publicationUpdate(id: $id, input: $input) { publication { catalog { id } id } userErrors { field message } } }"
+}

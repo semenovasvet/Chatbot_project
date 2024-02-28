@@ -1,6 +1,6 @@
 from django.urls import path
-from . import gpt_bot
+from .botFunctions import ChatBot
 
 urlpatterns = [
-    path('', gpt_bot.chatbot, name='chatbot')
+    path('', ChatBot().main, name='chatbot')
 ]
