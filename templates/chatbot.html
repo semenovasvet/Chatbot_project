@@ -2,117 +2,120 @@
 
 {% block styles %}
 <style>
-    body, html {
-      height: 100%;
-    }
+  body,
+  html {
+    height: 100%;
+  }
 
-    .messages-box {
-      flex: 1;
-      overflow-y: auto;
-    }
+  .messages-box {
+    flex: 1;
+    overflow-y: auto;
+  }
 
-    .messages-list {
-      padding-left: 0;
-    }
+  .messages-list {
+    padding-left: 0;
+  }
 
-    .message {
-      margin-bottom: 15px;
-      list-style: none;
-    }
+  .message {
+    margin-bottom: 15px;
+    list-style: none;
+  }
 
-    .message-text {
-      padding: 10px;
-      border-radius: 5px;
-    }
+  .message-text {
+    padding: 10px;
+    border-radius: 5px;
+  }
 
-    .sent {
-      background-color: #dcf8c6;
-      align-self: flex-end;
-    }
+  .sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+  }
 
-    .received {
-      background-color: #f1f0f0;
-      align-self: flex-start;
-    }
+  .received {
+    background-color: #f1f0f0;
+    align-self: flex-start;
+  }
 
-    .salesOrderNumber-form {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: #f8f9fa;
-    }
+  .salesOrderNumber-form {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
 
-    .product-form {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: #f8f9fa;
-    }
+  .product-form {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
 
-    .email-form {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: #f8f9fa;
-    }
+  .email-form {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
 
-    .advice-form {
-      display: flex;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: #f8f9fa;
-    }
+  .advice-form {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
 
-    .track-shipment {
-      flex: 1;
-      border-radius: 0;
-      border-right: none;
-    }
+  .track-shipment {
+    flex: 1;
+    border-radius: 0;
+    border-right: none;
+  }
 
-    .product-description {
-      flex: 1;
-      border-radius: 0;
-      border-right: none;
-    }
+  .product-description {
+    flex: 1;
+    border-radius: 0;
+    border-right: none;
+  }
 
-    .email {
-      flex: 1;
-      border-radius: 0;
-      border-right: none;
-    }
-    .advice {
-      flex: 1;
-      border-radius: 0;
-      border-right: none;
-    }
-    
-    .btn-send {
-      border-radius: 0;
-      margin-right: 20px;
-    }
+  .email {
+    flex: 1;
+    border-radius: 0;
+    border-right: none;
+  }
 
-    .chat-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
+  .advice {
+    flex: 1;
+    border-radius: 0;
+    border-right: none;
+  }
 
-    .options-container.hidden {
+  .btn-send {
+    border-radius: 0;
+    margin-right: 20px;
+  }
+
+  .chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .options-container.hidden {
     display: none;
-}
-    .option-button {
+  }
+
+  .option-button {
     margin: 10px;
     padding: 10px;
     border: 2px solid #007bff;
@@ -123,13 +126,14 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-.option-button:hover {
+  }
+
+  .option-button:hover {
     background-color: #007bff;
     color: #fff;
-}
+  }
 
-.forgot-button {
+  .forgot-button {
     margin: 10px;
     padding: 5px;
     border: 0px;
@@ -139,14 +143,13 @@
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+  }
 
-.forgot-button:hover {
+  .forgot-button:hover {
     background-color: #007bff;
     color: #fff;
-}
-
-  </style>
+  }
+</style>
 {% endblock %}
 
 
@@ -156,9 +159,9 @@
     <div class="card-header bg-primary text-white">Chat</div>
 
     <div class="card-body messages-box">
-      
+
       <ul class="list-unstyled messages-list">
-        
+
         <li class="message received">
           <div class="message-text">
             <div class="message-sender">
@@ -169,13 +172,21 @@
             </div>
           </div>
         </li>
-
+        <!-- Options Container -->
+        <!-- This div contains buttons for different user actions related to order management -->
         <div class="options-container" id="first-set-options" style="display:block">
+          <!-- Track Shipment Button -->
+          <!-- Clicking this button triggers shipment tracking functionality -->
           <button type="button" class="option-button" onclick="trackShipment()">Lieferung verfolgen</button>
+          <!-- Product Search Help Button -->
+          <!-- Clicking this button helps users in finding a product -->
           <button type="button" class="option-button" onclick="findProduct()">Hilfe bei der Produktsuche</button>
+          <!-- Request Return Button -->
+          <!-- Clicking this button initiates a product return request -->
           <button type="button" class="option-button" onclick="requestReturn()">Rückgabe beantragen</button>
         </div>
-        
+
+        <!-- Displays the selected option as a sent message-->
         <li class="message sent">
           <div class="message-text" id="first-answer" style="display:none;">
             <div class="message-sender">
@@ -183,122 +194,144 @@
             </div>
             <div class="message-content">
             </div>
-          </div> </li>
-        
+          </div>
+        </li>
 
+        <!-- Track Shipment Section -->
+        <!-- This section is initially hidden and is displayed when the user opts to track a shipment -->
         <div id="track-shipment" style="display:none;">
-              <li class="message received">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>AI Chatbot</b>
-                  </div>
-                  <div class="message-content">
-                    Bitte geben Sie die Auftragsnummer ein
-                    <button id="forgot-button" type="button" class="forgot-button" onclick="forgotNumber()" style="display:block">Ich habe die Auftragsnummer vergessen</button>
-                  </div>
-                </div>
-              </li>
-    
-              {% for chat in chats %}
-                {% if chat.user == request.user %}
-      
-                  <li class="message sent">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>Sie</b>
-                  </div>
-                  <div class="message-content">
-                    {{chat.message}}
-                  </div>
-                </div>
-              </li>
-      
-              <li class="message received">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>AI Chatbot</b>
-                  </div>
-                  <div class="message-content">
-                    {{chat.response}}
-                  </div>
-                </div>
-              </li>
-      
-                {% endif %}
-              {% endfor %}
+          <li class="message received">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                Bitte geben Sie die Auftragsnummer ein
+                <!-- Forgot Order Number Button -->
+                <!-- Provides an option for users who forgot their order number -->
+                <button id="forgot-button" type="button" class="forgot-button" onclick="forgotNumber()"
+                  style="display:block">Ich habe die Auftragsnummer vergessen</button>
+              </div>
+            </div>
+          </li>
+          <!-- Dynamically Generated Chat Messages -->
+          <!-- Loop through each chat entry related to the current user -->
+          {% for chat in chats %}
+          {% if chat.user == request.user %}
 
+          <!-- Sent Message Template -->
+          <!-- This list item represents a message sent by the user -->
+          <li class="message sent">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>Sie</b>
+              </div>
+              <div class="message-content">
+                {{chat.message}}
+              </div>
+            </div>
+          </li>
+          <!-- Received Message Template -->
+          <!-- This list item represents a response from the chatbot -->
+          <li class="message received">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                {{chat.response}}
+              </div>
+            </div>
+          </li>
+
+          {% endif %}
+          {% endfor %}
+
+          <!-- Sales Order Number Form -->
+          <!-- This form allows users to input their sales order number for tracking purposes -->
           <form class="salesOrderNumber-form">
+            {%csrf_token%}
+            <div class="input-group">
+              <input type="text" id="sales-order-number" class="track-shipment" name="salesOrderNumber">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary btn-send">Senden</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Email Form -->
+        <!-- Hidden by default; displayed when the user clicks the "Forgot Order Number" button -->
+        <form class="email-form" style="display:none;">
           {%csrf_token%}
           <div class="input-group">
-            <input type="text" id="sales-order-number" class="track-shipment" name="salesOrderNumber">
+            <input type="text" id="email" class="email" name="email">
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary btn-send">Senden</button>
             </div>
-          </div></form>
-        </div>
-   
-
-      <form class="email-form" style="display:none;">
-      {%csrf_token%}
-      <div class="input-group">
-        <input type="text" id="email" class="email" name="email">
-        <div class="input-group-append">
-          <button type="submit" class="btn btn-primary btn-send">Senden</button>
-        </div>
-      </div></form>
+          </div>
+        </form>
 
 
-
+        <!-- Product Recommendation Section -->
+        <!-- This section is initially hidden and is displayed when the user needs help finding products -->
         <div id="find-product" style="display:none;">
-              <li class="message received">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>AI Chatbot</b>
-                  </div>
-                  <div class="message-content">
-                    Bitte beschreiben Sie, welche Art von Produkt Sie suchen?
-                  </div>
-                </div>
-              </li>
-      
-              {% for chat in chats %}
-                {% if chat.user == request.user %}
-      
-                  <li class="message sent">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>Sie</b>
-                  </div>
-                  <div class="message-content">
-                    {{chat.message}}
-                  </div>
-                </div>
-              </li>
-      
-              <li class="message received">
-                <div class="message-text">
-                  <div class="message-sender">
-                    <b>AI Chatbot</b>
-                  </div>
-                  <div class="message-content">
-                    {{chat.response}}
-                  </div>
-                </div>
-              </li>
-      
-                {% endif %}
-              {% endfor %}
-
-          <form class="product-form">
-          {%csrf_token%}
-          <div class="input-group">
-            <input type="text" id="product-info" class="product-description" name="productDescription">
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-primary btn-send">Senden</button>
+          <li class="message received">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                Bitte beschreiben Sie, welche Art von Produkt Sie suchen?
+              </div>
             </div>
-          </div></form>
-        </div>
+          </li>
+          <!-- Dynamically Generated Chat Messages -->
+          <!-- Loop through each chat entry related to the current user -->
+          {% for chat in chats %}
+          {% if chat.user == request.user %}
+          <!-- Sent Message Template -->
+          <!-- This list item represents a message sent by the user -->
+          <li class="message sent">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>Sie</b>
+              </div>
+              <div class="message-content">
+                {{chat.message}}
+              </div>
+            </div>
+          </li>
+          <!-- Received Message Template -->
+          <!-- This list item represents a response from the chatbot -->
+          <li class="message received">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                {{chat.response}}
+              </div>
+            </div>
+          </li>
 
+          {% endif %}
+          {% endfor %}
+
+          <!-- Product Form -->
+          <!-- This form allows users to input the description of the product they want to find -->
+          <form class="product-form">
+            {%csrf_token%}
+            <div class="input-group">
+              <input type="text" id="product-info" class="product-description" name="productDescription">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary btn-send">Senden</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- Chat Form -->
+        <!-- This form allows users to send their message to chatbot. This form is used during the second stage of product recomendation feature -->
         <form class="advice-form" style="display:none;">
           {%csrf_token%}
           <div class="input-group">
@@ -306,8 +339,9 @@
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary btn-send">Senden</button>
             </div>
-          </div></form>
-  
+          </div>
+        </form>
+
     </div>
     <br><br>
     <br><br>
@@ -316,31 +350,41 @@
 </div>
 
 <script>
+  // Flag to indicate if the forget order number function is used for the first time
   let isFirstTimeForgotFunc = true;
 
+  // Function to handle the tracking of shipments
   function trackShipment() {
+    // Access various elements on the page that will be manipulated
     const messagesList = document.querySelector('.messages-list');
     const hiddenDiv = document.getElementById('track-shipment');
     const options = document.getElementById('first-set-options');
     const firstAnswer = document.getElementById('first-answer');
     const content = firstAnswer.querySelector('.message-content');
 
+    // Display the 'track-shipment' div
     hiddenDiv.style.display = 'block';
+    // Hide the block with the initial choice options
     options.style.display = 'none';
+    // Display the selected option as a "sent" by the user message in the chat
     firstAnswer.style.display = 'block';
     content.textContent = 'Lieferung verfolgen';
 
+    // Get the form and input elements for submitting the sales order number
     const salesOrderNumberForm = document.querySelector('.salesOrderNumber-form');
     const salesOrderNumber = document.querySelector('.track-shipment');
 
+    // Add event listener for form submission to prevent default form submission and handle it
     salesOrderNumberForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const message = salesOrderNumber.value.trim();
       const messageName = salesOrderNumber.name;
+      // Check if the message is empty
       if (message.length === 0) {
         return;
       }
 
+      // Create a new message item and append it to the message list as a "sent" by the user message
       const messageItem = document.createElement('li');
       messageItem.classList.add('message', 'sent');
       messageItem.innerHTML = `
@@ -354,12 +398,16 @@
           </div>`;
       messagesList.appendChild(messageItem);
 
+      // Clear the input field after sending the message
       salesOrderNumber.value = '';
+      // Hide the Forgot Order Number Button
       const forgetButton = document.getElementById('forgot-button');
       forgetButton.style.display = 'none';
+
+      // Send the form data to the server
       fetch('', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
           'message': message,
@@ -372,6 +420,8 @@
           const response = data.response;
           const isFound = data.isFound;
           const messageItem = document.createElement('li');
+
+          // Display the server's response as a "sent" by chatbot message
           messageItem.classList.add('message', 'received');
           messageItem.innerHTML = `
           <div class="message-text">
@@ -384,11 +434,12 @@
           </div>
             `;
           messagesList.appendChild(messageItem);
-          
+
+          // If the sales order was not found: repeat
           if (!isFound) {
             trackShipment();
-          } else {
-          const messageItem = document.createElement('li');
+          } else {          // Otherwise show the final message
+            const messageItem = document.createElement('li');
             messageItem.classList.add('message', 'received');
             messageItem.innerHTML = `
             <div class="message-text">
@@ -407,44 +458,48 @@
               `;
             messagesList.appendChild(messageItem);
           }
-          
-          })
-          .catch(error => {
-                console.error('Error:', error);
-              });
-          
-            
-          
-       });
-    }
 
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  }
 
-
+  // Function to handle the product search
   function findProduct() {
-    
+
+    // Access various elements on the page that will be manipulated
     const messagesList = document.querySelector('.messages-list');
     const hiddenDiv = document.getElementById('find-product');
     const options = document.getElementById('first-set-options');
     const firstAnswer = document.getElementById('first-answer');
     const content = firstAnswer.querySelector('.message-content');
 
+    // Display the 'find-product' div block
     hiddenDiv.style.display = 'block';
+    // Hide the block with the initial choice options
     options.style.display = 'none';
+    // Display the selected option as a "sent" by the user message in the chat
     firstAnswer.style.display = 'block';
     content.textContent = 'Hilfe bei der Produktsuche';
 
+    // Get the form and input elements for querying products
     const productForm = document.querySelector('.product-form')
     const productDescription = document.querySelector('.product-description');
 
+    // Add event listener for form submission to prevent default form submission and handle it
     productForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
       const message = productDescription.value.trim();
       const messageName = productDescription.name;
+      // Check if the message is empty
       if (message.length === 0) {
         return;
       }
 
+      // Create a new message item and append it to the message list as a "sent" by the user message
       const messageItem = document.createElement('li');
       messageItem.classList.add('message', 'sent');
       messageItem.innerHTML = `
@@ -458,12 +513,14 @@
           </div>`;
       messagesList.appendChild(messageItem);
 
+      // Clear the input field after sending the message
       productDescription.value = '';
       productForm.style.display = 'none';
 
+      // Send the form data to the server
       fetch('', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
           'message': message,
@@ -475,6 +532,8 @@
           console.log('Response from server:', data);
           const response = data.response;
           const messageItem = document.createElement('li');
+
+          // Display the server's response as a "sent" by chatbot message
           messageItem.classList.add('message', 'received');
           messageItem.innerHTML = `
           <div class="message-text">
@@ -488,30 +547,38 @@
           </div>
             `;
           messagesList.appendChild(messageItem)
-        
+
         })
+        // Start adviceBot function immediately after finishing the current function
         .then(adviceBot)
         .catch(error => {
-              console.error('Error:', error);
+          console.error('Error:', error);
         });
     });
   }
 
+  // Function to handle the messages generation feature
   function adviceBot() {
+    // Access various elements on the page that will be manipulated
     const adviceForm = document.querySelector(".advice-form");
     const adviceMessage = document.querySelector('.advice');
     const messagesList = document.querySelector('.messages-list');
+
+    //Display the 'advice-form' div block
     adviceForm.style.display = "block";
 
+    // Add event listener for form submission to prevent default form submission and handle it
     adviceForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
       const message = adviceMessage.value.trim();
       const messageName = adviceMessage.name;
+      // Check if the message is empty
       if (message.length === 0) {
         return;
       }
 
+      // Create a new message item and append it to the message list as a "sent" by the user message
       const messageItem = document.createElement('li');
       messageItem.classList.add('message', 'sent');
       messageItem.innerHTML = `
@@ -525,11 +592,13 @@
           </div>`;
       messagesList.appendChild(messageItem);
 
+      // Clear the input field after sending the message
       adviceMessage.value = '';
 
+      // Send the form data to the server
       fetch('', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
           'message': message,
@@ -542,6 +611,8 @@
           const response = data.response;
           const isEnd = data.isEnd;
           const messageItem = document.createElement('li');
+
+          // Display the server's response as a "sent" by chatbot message
           messageItem.classList.add('message', 'received');
           messageItem.innerHTML = `
           <div class="message-text">
@@ -555,11 +626,13 @@
             `;
           messagesList.appendChild(messageItem)
 
+          // If isEnd is true -> finish the conversation
           if (isEnd) {
-          adviceForm.style.display = "none";
-          const messageItem = document.createElement('li');
-          messageItem.classList.add('message', 'received');
-          messageItem.innerHTML = `
+            adviceForm.style.display = "none";
+            const messageItem = document.createElement('li');
+            // Show the final message
+            messageItem.classList.add('message', 'received');
+            messageItem.innerHTML = `
           <div class="message-text">
               <div class="message-sender">
                 <b>AI Chatbot</b>
@@ -574,30 +647,36 @@
               <button type="button" class="option-button" onclick="humanSupportHelp()">Kontakt mit menschlicher Hilfe</button>            
               </div>
             `;
-          messagesList.appendChild(messageItem);
-            }
+            messagesList.appendChild(messageItem);
+          }
         })
         .catch(error => {
-              console.error('Error:', error);
+          console.error('Error:', error);
         });
     });
   }
 
+  // Function to handle returns
   function requestReturn() {
 
+    // Access various elements on the page that will be manipulated
     const options = document.getElementById('first-set-options');
     const firstAnswer = document.getElementById('first-answer');
     const content = firstAnswer.querySelector('.message-content');
 
+    // Hide the block with the initial choice options
     options.style.display = 'none';
+    // Display the selected option as a "sent" by the user message in the chat
     firstAnswer.style.display = 'block';
     content.textContent = 'Rückgabe beantragen';
 
+    // Open the link with the return form
     const linkReturn = "https://altruan.return-service.online/";
     window.open(linkReturn, "_blank")
 
     const messagesList = document.querySelector('.messages-list');
 
+    // Show the final message
     const lastQuestion = document.createElement('li');
     lastQuestion.classList.add('message', 'received');
     lastQuestion.innerHTML = `
@@ -616,22 +695,30 @@
       </div>
       `;
     messagesList.appendChild(lastQuestion);
-  
+
   }
 
+  // Function that is started after the Forgot Order Number Button was clicked
   function forgotNumber() {
+    // Hide the button
     const forgotButton = document.getElementById('forgot-button')
     forgotButton.style.display = 'none';
 
+    // Access various elements on the page that will be manipulated
     const messagesList = document.querySelector('.messages-list');
     const trackShipmentForm = document.querySelector('.salesOrderNumber-form');
 
+    // Hide the 'track-shipment' form
     trackShipmentForm.style.display = 'none';
 
+    /* The first time this function is executed:
+          - display the button's text as a message "sent" by the user
+          - display the chatbot's question as a message "sent" by the chatbot
+     */
     if (isFirstTimeForgotFunc) {
-    const userAnswerForgot = document.createElement('li');
-    userAnswerForgot.classList.add('message', 'sent')
-    userAnswerForgot.innerHTML = `
+      const userAnswerForgot = document.createElement('li');
+      userAnswerForgot.classList.add('message', 'sent')
+      userAnswerForgot.innerHTML = `
         <div class="message-text">
             <div class="message-sender">
                 <b>Sie</b>
@@ -640,12 +727,12 @@
               Ich habe die Auftragsnummer vergessen
             </div>
         </div>`;
-    messagesList.appendChild(userAnswerForgot);
-    isFirstTimeForgotFunc = false;
-      
-    const chatBotAskEmail = document.createElement('li');
-    chatBotAskEmail.classList.add('message', 'received')
-    chatBotAskEmail.innerHTML = `
+      messagesList.appendChild(userAnswerForgot);
+      isFirstTimeForgotFunc = false;
+
+      const chatBotAskEmail = document.createElement('li');
+      chatBotAskEmail.classList.add('message', 'received')
+      chatBotAskEmail.innerHTML = `
         <div class="message-text">
             <div class="message-sender">
               <b>AI Chatbot</b>
@@ -655,23 +742,28 @@
             </div>
         </div>
           `;
-    messagesList.appendChild(chatBotAskEmail);
-      }
+      messagesList.appendChild(chatBotAskEmail);
+    }
 
+    // Display the email form
     const emailForm = document.querySelector('.email-form');
     const email = document.querySelector('.email');
     emailForm.style.display = 'block';
 
+    // Add event listener for form submission to prevent default form submission and handle it
     emailForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
       const message = email.value.trim();
       const messageName = email.name;
+      // Check if the message is empty
       if (message.length === 0) {
         return;
       }
 
       const messageItem = document.createElement('li');
+
+      // Create a new message item and append it to the message list as a "sent" by the user message
       messageItem.classList.add('message', 'sent');
       messageItem.innerHTML = `
           <div class="message-text">
@@ -684,11 +776,13 @@
           </div>`;
       messagesList.appendChild(messageItem);
 
+      // Clear the input field after sending the message
       email.value = '';
 
+      // Send the form data to the server
       fetch('', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
           'message': message,
@@ -701,6 +795,8 @@
           const response = data.response;
           const isFound = data.isFound;
           const messageItem = document.createElement('li');
+
+          // Display the server's response as a "sent" by chatbot message
           messageItem.classList.add('message', 'received');
           messageItem.innerHTML = `
           <div class="message-text">
@@ -714,10 +810,11 @@
             `;
           messagesList.appendChild(messageItem);
 
+          // If nothing was found, repeat
           if (!isFound) {
             forgotNumber();
-          } else {
-          const messageItem = document.createElement('li');
+          } else {            // Otherwise show the final message
+            const messageItem = document.createElement('li');
             messageItem.classList.add('message', 'received');
             messageItem.innerHTML = `
             <div class="message-text">
@@ -736,37 +833,37 @@
               `;
             messagesList.appendChild(messageItem);
           }
-          
-          })
-          .catch(error => {
-                console.error('Error:', error);
-              })
 
-          
-            
-          
-          
-       });
-    }
-  
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+    });
+  }
+
+  // Function to restart the chatbot
   function restartBot() {
     location.reload();
   }
-  
 
+  // Function that is executed when the user needs help from a human support employee
   function humanSupportHelp() {
 
+    // Access various elements on the page that will be manipulated
     const messagesList = document.querySelector('.messages-list');
     const options = document.getElementById('end-set-options');
     const salesOrderNumberForm = document.querySelector('.salesOrderNumber-form');
     const emailForm = document.querySelector('.email-form');
     const productForm = document.querySelector('.product-form');
 
+    // Hide the selection buttons
     options.style.display = 'none';
+    // Hide all forms from all features
     salesOrderNumberForm.style.display = 'none';
     emailForm.style.display = 'none';
     productForm.style.display = 'none';
 
+    // Displays the selected option as a message "sent" by the user
     const messageItem = document.createElement('li');
     messageItem.classList.add('message', 'sent');
     messageItem.innerHTML = `
@@ -780,9 +877,10 @@
         </div>`;
     messagesList.appendChild(messageItem);
 
+    // Displays company's contact information
     const messageItemAnswer = document.createElement('li');
-      messageItemAnswer.classList.add('message', 'received');
-      messageItemAnswer.innerHTML = `
+    messageItemAnswer.classList.add('message', 'received');
+    messageItemAnswer.innerHTML = `
         <div class="message-text">
             <div class="message-sender">
               <b>AI Chatbot</b>
@@ -801,26 +899,26 @@
             </div>
         </div>
           `;
-        messagesList.appendChild(messageItemAnswer);
-       
-
-
+    messagesList.appendChild(messageItemAnswer);
   }
 
-
+  // Function that handles the finish of the conversation
   function ending() {
-    
+
+    // Access various elements on the page that will be manipulated
     const messagesList = document.querySelector('.messages-list');
     const options = document.getElementById('end-set-options');
     const salesOrderNumberForm = document.querySelector('.salesOrderNumber-form');
     const emailForm = document.querySelector('.email-form');
     const productForm = document.querySelector('.product-form');
 
+    // Hide all forms from all features
     options.style.display = 'none';
     salesOrderNumberForm.style.display = 'none';
     emailForm.style.display = 'none';
     productForm.style.display = 'none';
 
+    // Displays the selected option as a message "sent" by the user
     const messageItem = document.createElement('li');
     messageItem.classList.add('message', 'sent');
     messageItem.innerHTML = `
@@ -834,9 +932,10 @@
         </div>`;
     messagesList.appendChild(messageItem);
 
+    // Displays the final message
     const messageItemAnswer = document.createElement('li');
-      messageItemAnswer.classList.add('message', 'received');
-      messageItemAnswer.innerHTML = `
+    messageItemAnswer.classList.add('message', 'received');
+    messageItemAnswer.innerHTML = `
         <div class="message-text">
             <div class="message-sender">
               <b>AI Chatbot</b>
@@ -846,9 +945,7 @@
             </div>
         </div>
           `;
-        messagesList.appendChild(messageItemAnswer);
- 
-
+    messagesList.appendChild(messageItemAnswer);
   }
 
 
